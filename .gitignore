@@ -55,7 +55,8 @@ local.properties
 
 ### Eclipse Patch ###
 # Eclipse Core		
-.project
+# Importar projetos não-Eclipse para o Eclipse é um pain in the ass
+# .project
 
 # JDT-specific (Eclipse Java Development Tools)		
 .classpath
