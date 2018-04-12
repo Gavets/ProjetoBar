@@ -1,6 +1,7 @@
 package pucrs.gcs.cdl.persistence;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -21,7 +22,8 @@ public class DbConnection {
 	private static final String DB_URL = "jdbc:h2:" + Paths.get(DB_DIR.toString(), "bar").toUri().toString();
 	private static final String DB_USER = "sa";
 	private static final String DB_PASS = "";
-	private static final String DB_TABLE = "clientes";
+	private static final String DB_TABLE = "CLIENTE";
+	private static final Path DB_SQL = Paths.get(DB_DIR.toString(), "Bar_ER.sql");
 	private static Connection conn;
 	
 	private static void open() throws SQLException, IOException {
@@ -46,15 +48,9 @@ public class DbConnection {
 		return rs.next();
 	}
 	
-	private static boolean createTable() throws SQLException {
-		String sql = "CREATE TABLE IF NOT EXISTS Clientes ("
-				+ "cpf CHAR(11) PRIMARY KEY,"
-				+ "nome VARCHAR(200) UNIQUE NOT NULL,"
-				+ "idade INT NOT NULL,"
-				+ "genero BOOLEAN DEFAULT FALSE,"
-				+ "socio BOOLEAN DEFAULT FALSE,"
-				+ "numsocio VARCHAR(20) UNIQUE);";
+	private static boolean createTable() throws SQLException, IOException {
 		
+		String sql = new String(Files.readAllBytes(DB_SQL), StandardCharsets.UTF_8);		
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		return stmt.execute();
 	}
@@ -109,5 +105,50 @@ public class DbConnection {
 	
 	public static int countClientes() throws SQLException, IOException {
 		return countClientes(null);
+	}
+	
+	public static boolean isCaixaAberto() throws SQLException, IOException {
+		open();
+		int count = 0;
+		String sql = "SELECT COUNT(*) FROM CAIXA WHERE aberto = TRUE";
+		
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next())
+			count = rs.getInt(1);
+		
+		close();
+		return count > 0;
+	}
+	
+	public static void abreCaixa() throws SQLException, IOException, CaixaJaAbertoException {
+		if(isCaixaAberto()) {
+			throw new CaixaJaAbertoException();
+		}
+		open();
+		// TODO abrir caixa
+		close();
+	}
+	
+	public static void fechaCaixa() {
+		// TODO fechar caixa
+	}
+	
+	public static boolean isClienteNoBar() {
+		// TODO Verificar se o cliente está no bar.
+		// Tabela RegistroEntradaSaida, procurar por entrou = true
+		return false;
+	}
+	
+	public static void clienteEntra(Cliente cliente) {
+		// TODO Cliente entra no bar
+		// Verifica se cliente já está no bar
+		// Insere uma tupla em RegistroEntradaSaida com o horário de entrada
+	}
+	
+	public static void clienteSai(Cliente cliente) {
+		// TODO Cliente sai do bar
+		// Verifica se cliente está no bar
+		// Registra o horário de saída em RegistroEntradaSaida e ajusta "entrou" para false
 	}
 }
