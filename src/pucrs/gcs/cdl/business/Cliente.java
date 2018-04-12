@@ -8,6 +8,9 @@ public class Cliente {
 	private boolean socio;
 	private String numSocio;
 	
+	private static final boolean MASCULINO = false;
+	private static final boolean FEMININO = true;
+	
 	public Cliente(String nome, int idade, String cpf, boolean genero) {
 		this(nome, idade, cpf, genero, false, "");
 	}
@@ -45,7 +48,7 @@ public class Cliente {
 		this.cpf = cpf;
 	}
 
-	public boolean isGenero() {
+	public boolean getGenero() {
 		return genero;
 	}
 
