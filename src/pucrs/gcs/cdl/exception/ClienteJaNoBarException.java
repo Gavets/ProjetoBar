@@ -1,4 +1,4 @@
-package pucrs.gcs.cdl.persistence;
+package pucrs.gcs.cdl.exception;
 
 public class ClienteJaNoBarException extends Exception {
 	/**

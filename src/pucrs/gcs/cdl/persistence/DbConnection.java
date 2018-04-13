@@ -12,18 +12,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import pucrs.gcs.cdl.business.Cliente;
+import pucrs.gcs.cdl.exception.ClienteJaNoBarException;
+import pucrs.gcs.cdl.exception.ClienteForaDoBarException;
 
 public class DbConnection {
 	private static final Path DB_DIR = Paths.get(System.getProperty("user.dir"), "db");
 	private static final String DB_URL = "jdbc:h2:" + Paths.get(DB_DIR.toString(), "bar").toUri().toString();
 	private static final String DB_USER = "sa";
 	private static final String DB_PASS = "";
-	private static final String DB_TABLE = "CLIENTE";
 	private static final Path DB_SQL = Paths.get(DB_DIR.toString(), "Bar_ER.sql");
 	private static Connection conn;
 	
@@ -45,7 +45,7 @@ public class DbConnection {
 	
 	private static boolean tableExists() throws SQLException {
 		DatabaseMetaData meta = conn.getMetaData();
-		ResultSet rs = meta.getTables(null, null, DB_TABLE, null);
+		ResultSet rs = meta.getTables(null, null, "CLIENTE", null);
 		return rs.next();
 	}
 	
@@ -55,7 +55,7 @@ public class DbConnection {
 	
 	public static List<Cliente> getClientes(String filter) throws SQLException, IOException {
 		open();
-		String sql = "SELECT nome, idade, cpf, genero, socio, numSocio FROM " + DB_TABLE;
+		String sql = "SELECT nome, idade, cpf, genero, socio, numSocio FROM Cliente";
 		if(filter != null)
 			sql += " WHERE " + filter;
 		ResultSet rs = querySelect(sql);
@@ -72,11 +72,32 @@ public class DbConnection {
 		return getClientes(null);
 	}
 	
+	public static List<Cliente> getClientesNoBar(String filter) throws SQLException, IOException {
+		open();				
+		String sql =  "SELECT C.nome, C.idade, C.cpf, C.genero, C.socio, C.numSocio FROM Cliente C"
+					+ " INNER JOIN Bar B ON B.cliente_cpf = C.cpf";
+		if(filter != null)
+			sql += " WHERE " + filter;
+
+		ResultSet rs = querySelect(sql);
+		
+		List<Cliente> clientes = new ArrayList<>();
+		while(rs.next())
+			clientes.add(new Cliente(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getString(6)));
+		
+		close();
+		return clientes;
+	}
+	
+	public static List<Cliente> getClientesNoBar() throws SQLException, IOException {
+		return getClientesNoBar(null);
+	}
+	
 	public static boolean putCliente(Cliente cliente) throws SQLException, IOException {
 		open();
 		String sql = String.format(
-				"INSERT INTO %s(nome, idade, cpf, genero, socio, numSocio) VALUES('%s', %d, '%s', %b, %b, '%s')",
-				DB_TABLE, cliente.getNome(), cliente.getIdade(), cliente.getCpf(), cliente.getGenero(), cliente.isSocio(), cliente.getNumSocio()
+				"INSERT INTO Cliente(nome, idade, cpf, genero, socio, numSocio) VALUES('%s', %d, '%s', %b, %b, '%s')",
+				cliente.getNome(), cliente.getIdade(), cliente.getCpf(), cliente.getGenero(), cliente.isSocio(), cliente.getNumSocio()
 				);
 		
 		boolean result = queryInsert(sql);
@@ -87,7 +108,7 @@ public class DbConnection {
 	public static int countClientes(String filter) throws SQLException, IOException {
 		open();
 		int count = 0;
-		String sql = "SELECT COUNT(*) FROM " + DB_TABLE;
+		String sql = "SELECT COUNT(*) FROM Cliente";
 		if(filter != null)
 			sql += " WHERE " + filter;
 		
@@ -103,12 +124,30 @@ public class DbConnection {
 		return countClientes(null);
 	}
 	
-	public static boolean isCaixaAberto() throws SQLException, IOException {
+	public static int countClientesNoBar(String filter) throws SQLException, IOException {
 		open();
 		int count = 0;
-		String sql = "SELECT COUNT(*) FROM CAIXA WHERE aberto = TRUE";
+		String sql = "SELECT COUNT(*) FROM Bar";
+		if(filter != null)
+			sql += " INNER JOIN Cliente ON cpf = cliente_cpf WHERE " + filter;
 		
 		ResultSet rs = querySelect(sql);
+		while(rs.next())
+			count = rs.getInt(1);
+		
+		close();
+		return count;
+	}
+	
+	public static int countClientesNoBar() throws SQLException, IOException {
+		return countClientes(null);
+	}
+	
+	public static boolean isClienteNoBar(String cpf) throws SQLException, IOException {
+		open();
+		String sql = String.format("SELECT COUNT(*) FROM Bar WHERE cliente_cpf = '%s'", cpf);
+		ResultSet rs = querySelect(sql);
+		int count = 0;
 		while(rs.next())
 			count = rs.getInt(1);
 		
@@ -116,109 +155,29 @@ public class DbConnection {
 		return count > 0;
 	}
 	
-	public static boolean abreCaixa() throws SQLException, IOException, CaixaJaAbertoException {
-		if(isCaixaAberto())
-			throw new CaixaJaAbertoException();
-		
-		open();
-		String sql = "INSERT INTO CAIXA(dia, aberto) VALUES(" + LocalDateTime.now().toString() + ", true)";
-		boolean result = queryInsert(sql);
-		close();
-		return result;
+	public static boolean isClienteNoBar(Cliente cliente) throws SQLException, IOException {
+		return isClienteNoBar(cliente.getCpf());
 	}
 	
-	public static boolean fechaCaixa() throws SQLException, IOException, SemCaixaAbertoException {
-		if(!isCaixaAberto())
-			throw new SemCaixaAbertoException();
-		
-		open();
-		String sql = "UPDATE CAIXA SET aberto = FALSE WHERE aberto = TRUE";
-		int result = queryUpdate(sql);
-		close();
-		return result > 0;
-	}
-	
-	public static boolean isClienteNoBar(Cliente c) throws SQLException {
-		String sql = "SELECT COUNT(*) FROM RegistroEntradaSaida WHERE Entrou = TRUE AND CPF = '" + c.getCpf();
-		ResultSet rs = querySelect(sql);
-		int count = 0;
-		while(rs.next())
-			count = rs.getInt(1);
-		
-		return count > 0;
-	}
-	
-	public static boolean clienteEntra(Cliente cliente) throws SQLException, ClienteJaNoBarException, SemCaixaAbertoException, IOException {
-		if(!isCaixaAberto())
-			throw new SemCaixaAbertoException();
-		
+	public static boolean clienteEntra(Cliente cliente) throws SQLException, ClienteJaNoBarException, IOException {		
 		if(isClienteNoBar(cliente))
 			throw new ClienteJaNoBarException();
 		
-		int idCaixa = getIdCaixaAberto();
 		open();
-		String sql = String.format("INSERT INTO Cliente_Caixa(id_Caixa, cpf) VALUES(%d, '%s')", cliente.getCpf(), idCaixa);
-		if(!queryInsert(sql))
-			throw new SQLException("Falha ao inserir cliente");
-		close();
-	
-		int idClienteCaixa = getIdClienteCaixa(cliente);
-		open();
-		sql = String.format("INSERT INTO RegistroEntradaSaida(id_cliente_caixa, entrou, horario_entrada) VALUES(%d, %b, %s)", idClienteCaixa, true, LocalDateTime.now().toString());
+		String sql = String.format("INSERT INTO Bar(cliente_cpf) VALUES('%s')", cliente.getCpf());
 		boolean result = queryInsert(sql);
 		close();
 		return result;
 	}
 	
-	public static boolean clienteSai(Cliente cliente) throws SemCaixaAbertoException, SemClienteNoBarException, SQLException, IOException {
-		if(!isCaixaAberto())
-			throw new SemCaixaAbertoException();
-		
+	public static boolean clienteSai(Cliente cliente) throws ClienteForaDoBarException, SQLException, IOException {		
 		if(!isClienteNoBar(cliente))
-			throw new SemClienteNoBarException();
-		
-		int idCaixa = getIdCaixaAberto();
+			throw new ClienteForaDoBarException();
 		open();
-		String sql = String.format("INSERT INTO Cliente_Caixa(id_Caixa, cpf) VALUES(%d, '%s')", cliente.getCpf(), idCaixa);
-		if(!queryInsert(sql))
-			throw new SQLException("Falha ao inserir cliente");
-		close();
-	
-		int idClienteCaixa = getIdClienteCaixa(cliente);
-		open();
-		sql = String.format("UPDATE RegistroEntradaSaida SET horario_saida = '%s', entrou = FALSE WHERE id = %d", LocalDateTime.now(), idClienteCaixa);
+		String sql = String.format("DELETE FROM Bar WHERE cliente_cpf = '%s'", cliente.getCpf());
 		boolean result = queryInsert(sql);
 		close();
 		return result;
-	}
-	
-	private static int getIdCaixaAberto() throws SQLException, SemCaixaAbertoException, IOException {
-		if(!isCaixaAberto())
-			throw new SemCaixaAbertoException();
-		
-		open();
-		String sql = "SELECT id_caixa FROM CAIXA WHERE aberto = TRUE";
-		ResultSet rs = querySelect(sql);
-		int id = -1;
-		while(rs.next())
-			id = rs.getInt(1);
-		close();
-		return id;
-	}
-	
-	private static int getIdClienteCaixa(Cliente cliente) throws SQLException, SemCaixaAbertoException, IOException {
-		if(!isCaixaAberto())
-			throw new SemCaixaAbertoException();
-		
-		open();
-		String sql = "SELECT id_cliente_caixa FROM Cliente_Caixa CC WHERE CC.CPF = '" + cliente.getCpf() + "' "
-					+ "INNER JOIN CAIXA C WHERE C.aberto = true"; 
-		ResultSet rs = querySelect(sql);
-		int id = -1;
-		while(rs.next())
-			id = rs.getInt(1);
-		close();
-		return id;
 	}
 	
 	private static ResultSet querySelect(String sql) throws SQLException {
@@ -231,8 +190,10 @@ public class DbConnection {
 		return stmt.execute();
 	}
 	
+	/*
 	private static int queryUpdate(String sql) throws SQLException {
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		return stmt.executeUpdate();
 	}
+	*/
 }

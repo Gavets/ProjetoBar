@@ -1,12 +1,12 @@
-package pucrs.gcs.cdl.persistence;
+package pucrs.gcs.cdl.exception;
 
-public class SemClienteNoBarException extends Exception {
+public class ClienteForaDoBarException extends Exception {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2298641847574468087L;
 
-	public SemClienteNoBarException() {
+	public ClienteForaDoBarException() {
 		super("O cliente não está no bar!");
 	}
 }
