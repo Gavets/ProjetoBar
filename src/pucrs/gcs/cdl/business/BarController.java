@@ -7,9 +7,9 @@ import java.util.stream.Collectors;
 
 import pucrs.gcs.cdl.persistence.DbConnection;
 
-public class CadClientes {
+public class BarController {
 	
-	public CadClientes() {
+	public BarController() {
 		
 	}
 	
