@@ -17,7 +17,7 @@ public class BarController {
 		
 	}
 	
-	public boolean clienteEntra(Cliente cliente) {
+	public static boolean clienteEntra(Cliente cliente) {
 		try {
 			return DbConnection.clienteEntra(cliente);
 		} catch (SQLException | ClienteJaNoBarException | IOException e) {
@@ -26,7 +26,7 @@ public class BarController {
 		return false;
 	}
 	
-	public boolean clienteSai(Cliente cliente) {
+	public static boolean clienteSai(Cliente cliente) {
 		try {
 			return DbConnection.clienteSai(cliente);
 		} catch (SQLException | ClienteForaDoBarException | IOException e) {
@@ -35,7 +35,7 @@ public class BarController {
 		return false;
 	}
 	
-	public void cadastraCliente(Cliente cliente) {
+	public static void cadastraCliente(Cliente cliente) {
 		try {
 			DbConnection.putCliente(cliente);
 		} catch (SQLException | IOException e) {
@@ -43,15 +43,15 @@ public class BarController {
 		}
 	}
 	
-	public void removeCliente() {
+	public static void removeCliente() {
 		
 	}
 	
-	public void alteraCliente() {
+	public static void alteraCliente() {
 		
 	}
 	
-	public List<Cliente> consultaClientes() {
+	public static List<Cliente> consultaClientes() {
 		try {
 			return DbConnection.getClientes();
 		} catch (SQLException | IOException e) {
@@ -60,7 +60,7 @@ public class BarController {
 		return Collections.emptyList();
 	}
 	
-	public List<Cliente> consultaClientesNoBar() {
+	public static List<Cliente> consultaClientesNoBar() {
 		try {
 			return DbConnection.getClientesNoBar();
 		} catch (SQLException | IOException e) {
@@ -69,7 +69,7 @@ public class BarController {
 		return Collections.emptyList();
 	}
 	
-	public boolean clienteEstaNoBar(String cpf) {
+	public static boolean clienteEstaNoBar(String cpf) {
 		try {
 			return DbConnection.isClienteNoBar(cpf);
 		} catch (SQLException | IOException e) {
@@ -78,11 +78,20 @@ public class BarController {
 		return false;
 	}
 	
-	public double consultaPorcentagemFeminino() {
+	public static int consultaTotalClientesNoBar() {
+		try {
+			return DbConnection.countClientesNoBar();
+		} catch(SQLException | IOException e) {
+			System.out.println("ERRO: " + e.getMessage());
+		}
+		return 0;
+	}
+	
+	public static double consultaPorcentagemFeminino() {
 		try {
 			int totalClientes = DbConnection.countClientesNoBar();
-			int totalFem = DbConnection.countClientesNoBar("genero = TRUE");
-			return totalFem / totalClientes * 100;
+			int totalFem = DbConnection.countMulheresNoBar();
+			return (double) totalFem / totalClientes * 100;
 		} catch (SQLException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
 		}
@@ -90,11 +99,11 @@ public class BarController {
 		return 0;
 	}
 	
-	public double consultaPorcentagemSocios() {
+	public static double consultaPorcentagemSocios() {
 		try {
 			int totalClientes = DbConnection.countClientesNoBar();
-			int totalSocios = DbConnection.countClientesNoBar("socio = TRUE");
-			return totalSocios / totalClientes * 100;
+			int totalSocios = DbConnection.countSociosNoBar();
+			return (double) totalSocios / totalClientes * 100;
 		} catch (SQLException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
 		}
@@ -102,7 +111,7 @@ public class BarController {
 		return 0;
 	}
 	
-	public void exportaClientes(String file) {
+	public static void exportaClientes(String file) {
 		try {
 			List<Cliente> clientes = DbConnection.getClientesNoBar();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));

@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import pucrs.gcs.cdl.business.BarController;
 
 public class Home implements Initializable {
 	
@@ -35,21 +36,25 @@ public class Home implements Initializable {
 	}
 	
 	public void updateStats() {
-		getClientesNoBar();
+		getClientesNoBarCount();
 		getPorcentagemMulheres();
 		getPorcentagemSocios();
 	}
 	
 	public void getClientesNoBar() {
-		
+		BarController.consultaClientesNoBar();
+	}
+	
+	public void getClientesNoBarCount() {
+		lblClientesNoBar.setText(String.valueOf(BarController.consultaTotalClientesNoBar()));
 	}
 	
 	public void getPorcentagemMulheres() {
-		
+		lblPorcentagemMulheres.setText(String.valueOf(BarController.consultaPorcentagemFeminino()));
 	}
 	
 	public void getPorcentagemSocios() {
-		
+		lblPorcentagemSocios.setText(String.valueOf(BarController.consultaPorcentagemSocios()));
 	}
 	
 	

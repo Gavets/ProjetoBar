@@ -99,7 +99,7 @@
                   <Font name="Roboto" size="18.0" />
                </font>
             </Label>
-            <Label" prefHeight="18.0" prefWidth="125.0" text="\% Mulheres:" textAlignment="CENTER" GridPane.rowIndex="1">
+            <Label prefHeight="18.0" prefWidth="125.0" text="\% Mulheres:" textAlignment="CENTER" GridPane.rowIndex="1">
                <font>
                   <Font name="Roboto Light" size="18.0" />
                </font>

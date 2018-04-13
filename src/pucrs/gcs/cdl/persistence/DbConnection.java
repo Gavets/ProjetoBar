@@ -94,30 +94,20 @@ public class DbConnection {
 	}
 	
 	public static boolean putCliente(Cliente cliente) throws SQLException, IOException {
-		open();
 		String sql = String.format(
 				"INSERT INTO Cliente(nome, idade, cpf, genero, socio, numSocio) VALUES('%s', %d, '%s', %b, %b, '%s')",
 				cliente.getNome(), cliente.getIdade(), cliente.getCpf(), cliente.getGenero(), cliente.isSocio(), cliente.getNumSocio()
 				);
 		
-		boolean result = queryInsert(sql);
-		close();
-		return result;
+		return queryInsert(sql);
 	}
 	
 	public static int countClientes(String filter) throws SQLException, IOException {
-		open();
-		int count = 0;
 		String sql = "SELECT COUNT(*) FROM Cliente";
 		if(filter != null)
 			sql += " WHERE " + filter;
 		
-		ResultSet rs = querySelect(sql);
-		while(rs.next())
-			count = rs.getInt(1);
-		
-		close();
-		return count;
+		return queryCount(sql);
 	}
 	
 	public static int countClientes() throws SQLException, IOException {
@@ -125,59 +115,53 @@ public class DbConnection {
 	}
 	
 	public static int countClientesNoBar(String filter) throws SQLException, IOException {
-		open();
-		int count = 0;
 		String sql = "SELECT COUNT(*) FROM Bar";
 		if(filter != null)
-			sql += " INNER JOIN Cliente ON cpf = cliente_cpf WHERE " + filter;
+			sql += " INNER JOIN Cliente C ON C.cpf = cliente_cpf AND " + filter;
 		
-		ResultSet rs = querySelect(sql);
-		while(rs.next())
-			count = rs.getInt(1);
-		
-		close();
-		return count;
+		return queryCount(sql);
 	}
 	
 	public static int countClientesNoBar() throws SQLException, IOException {
-		return countClientes(null);
+		return countClientesNoBar(null);
+	}
+	
+	public static int countMulheresNoBar() throws SQLException, IOException {
+		return countClientesNoBar("C.genero = TRUE");
+	}
+	
+	public static int countSociosNoBar() throws SQLException, IOException {
+		return countClientesNoBar("C.socio = TRUE");
 	}
 	
 	public static boolean isClienteNoBar(String cpf) throws SQLException, IOException {
-		open();
 		String sql = String.format("SELECT COUNT(*) FROM Bar WHERE cliente_cpf = '%s'", cpf);
-		ResultSet rs = querySelect(sql);
-		int count = 0;
-		while(rs.next())
-			count = rs.getInt(1);
-		
-		close();
-		return count > 0;
+		return queryCount(sql) > 0;
 	}
 	
 	public static boolean isClienteNoBar(Cliente cliente) throws SQLException, IOException {
 		return isClienteNoBar(cliente.getCpf());
 	}
 	
+	public static boolean clienteExists(Cliente cliente ) throws SQLException, IOException {
+		String sql = String.format("SELECT COUNT(*) FROM Cliente WHERE cpf = '%s'", cliente.getCpf());
+		return queryCount(sql) > 0;
+	}
+	
 	public static boolean clienteEntra(Cliente cliente) throws SQLException, ClienteJaNoBarException, IOException {		
 		if(isClienteNoBar(cliente))
 			throw new ClienteJaNoBarException();
-		
-		open();
+
 		String sql = String.format("INSERT INTO Bar(cliente_cpf) VALUES('%s')", cliente.getCpf());
-		boolean result = queryInsert(sql);
-		close();
-		return result;
+		return queryInsert(sql);
 	}
 	
 	public static boolean clienteSai(Cliente cliente) throws ClienteForaDoBarException, SQLException, IOException {		
 		if(!isClienteNoBar(cliente))
 			throw new ClienteForaDoBarException();
-		open();
+
 		String sql = String.format("DELETE FROM Bar WHERE cliente_cpf = '%s'", cliente.getCpf());
-		boolean result = queryInsert(sql);
-		close();
-		return result;
+		return queryInsert(sql);
 	}
 	
 	private static ResultSet querySelect(String sql) throws SQLException {
@@ -185,9 +169,22 @@ public class DbConnection {
 		return stmt.executeQuery();
 	}
 	
-	private static boolean queryInsert(String sql) throws SQLException {
+	private static boolean queryInsert(String sql) throws SQLException, IOException {
+		open();
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		return stmt.execute();
+		boolean result = stmt.execute();
+		close();
+		return result;
+	}
+	
+	private static int queryCount(String sql) throws SQLException, IOException {
+		int count = 0;
+		open();
+		ResultSet rs = querySelect(sql);
+		while(rs.next())
+			count = rs.getInt(1);
+		close();
+		return count;
 	}
 	
 	/*
