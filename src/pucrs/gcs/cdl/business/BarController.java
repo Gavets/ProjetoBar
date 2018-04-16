@@ -1,6 +1,7 @@
 package pucrs.gcs.cdl.business;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,22 +18,30 @@ public class BarController {
 		
 	}
 	
-	public static boolean clienteEntra(Cliente cliente) {
+	public static boolean clienteEntra(String cpf) {
 		try {
-			return DbConnection.clienteEntra(cliente);
+			return DbConnection.clienteEntra(cpf);
 		} catch (SQLException | ClienteJaNoBarException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
 		}
 		return false;
 	}
 	
-	public static boolean clienteSai(Cliente cliente) {
+	public static boolean clienteEntra(Cliente cliente) {
+		return clienteEntra(cliente.getCpf());
+	}
+	
+	public static boolean clienteSai(String cpf) {
 		try {
-			return DbConnection.clienteSai(cliente);
+			return DbConnection.clienteSai(cpf);
 		} catch (SQLException | ClienteForaDoBarException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
 		}
 		return false;
+	}
+	
+	public static boolean clienteSai(Cliente cliente) {
+		return clienteSai(cliente.getCpf());
 	}
 	
 	public static void cadastraCliente(Cliente cliente) {
@@ -67,6 +76,15 @@ public class BarController {
 			System.out.println("ERRO: " + e.getMessage());
 		}
 		return Collections.emptyList();
+	}
+	
+	public static boolean clienteExists(String cpf) {
+		try {
+			return DbConnection.clienteExists(cpf);
+		} catch (SQLException | IOException e) {
+			System.out.println("ERRO: " + e.getMessage());
+		}
+		return false;
 	}
 	
 	public static boolean clienteEstaNoBar(String cpf) {
@@ -111,14 +129,14 @@ public class BarController {
 		return 0;
 	}
 	
-	public static void exportaClientes(String file) {
+	public static void exportaClientes(File file) {
 		try {
 			List<Cliente> clientes = DbConnection.getClientesNoBar();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-			writer.write("Nome,Idade,CPF,Gênero,Sócio,Número de sócio");
+			writer.write("Nome,Idade,CPF,Gênero,Sócio,Número de sócio\n");
 			for(Cliente c : clientes) {
 				writer.write(String.format(
-						"%s,%d,%s,%s,%s,%s,%s",
+						"%s,%d,%s,%s,%s,%s\n",
 						c.getNome(), c.getIdade(), c.getCpf(), c.getGenero() ? "Feminino" : "Masculino", c.isSocio() ? "Sim" : "Não", c.getNumSocio()
 						));
 			}

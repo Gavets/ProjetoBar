@@ -143,25 +143,37 @@ public class DbConnection {
 		return isClienteNoBar(cliente.getCpf());
 	}
 	
-	public static boolean clienteExists(Cliente cliente ) throws SQLException, IOException {
-		String sql = String.format("SELECT COUNT(*) FROM Cliente WHERE cpf = '%s'", cliente.getCpf());
+	public static boolean clienteExists(String cpf) throws SQLException, IOException {
+		String sql = String.format("SELECT COUNT(*) FROM Cliente WHERE cpf = '%s'", cpf);
 		return queryCount(sql) > 0;
 	}
 	
-	public static boolean clienteEntra(Cliente cliente) throws SQLException, ClienteJaNoBarException, IOException {		
-		if(isClienteNoBar(cliente))
+	public static boolean clienteExists(Cliente cliente) throws SQLException, IOException {
+		return clienteExists(cliente.getCpf());
+	}
+	
+	public static boolean clienteEntra(String cpf) throws SQLException, ClienteJaNoBarException, IOException {		
+		if(isClienteNoBar(cpf))
 			throw new ClienteJaNoBarException();
 
-		String sql = String.format("INSERT INTO Bar(cliente_cpf) VALUES('%s')", cliente.getCpf());
+		String sql = String.format("INSERT INTO Bar(cliente_cpf) VALUES('%s')", cpf);
 		return queryInsert(sql);
 	}
 	
-	public static boolean clienteSai(Cliente cliente) throws ClienteForaDoBarException, SQLException, IOException {		
-		if(!isClienteNoBar(cliente))
+	public static boolean clienteEntra(Cliente cliente) throws SQLException, ClienteJaNoBarException, IOException {
+		return clienteEntra(cliente.getCpf());
+	}
+	
+	public static boolean clienteSai(String cpf) throws ClienteForaDoBarException, SQLException, IOException {		
+		if(!isClienteNoBar(cpf))
 			throw new ClienteForaDoBarException();
 
-		String sql = String.format("DELETE FROM Bar WHERE cliente_cpf = '%s'", cliente.getCpf());
+		String sql = String.format("DELETE FROM Bar WHERE cliente_cpf = '%s'", cpf);
 		return queryInsert(sql);
+	}
+	
+	public static boolean clienteSai(Cliente cliente) throws SQLException, ClienteForaDoBarException, IOException {
+		return clienteSai(cliente.getCpf());
 	}
 	
 	private static ResultSet querySelect(String sql) throws SQLException {
