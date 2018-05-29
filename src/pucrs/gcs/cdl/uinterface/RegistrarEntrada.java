@@ -89,7 +89,7 @@ public class RegistrarEntrada implements Initializable{
 		cbxSocio.getItems().setAll(Socio.TRUE.toString(), Socio.FALSE.toString());
 	}
 	
-	public void validaCpf(KeyEvent event) {
+	public void validaCpf() {
 		String cpf = iptCpf.textProperty().get();
 		
 		if(cpf.length() > 11) {
@@ -97,7 +97,7 @@ public class RegistrarEntrada implements Initializable{
 			iptCpf.positionCaret(11);
 		}
 		
-		if(!isRegistering && cpf.length() == 11) {
+		if(!isRegistering && cpf.length() == 11 && CPF.isValidCPF(cpf)) {
 			if(!BarController.clienteExists(cpf)) {
 				isRegistering = true;
 				showRegisterControls();
@@ -118,7 +118,7 @@ public class RegistrarEntrada implements Initializable{
 					iptNumSocio.getText()
 					);
 			BarController.cadastraCliente(cliente);
-			BarController.clienteEntra(cliente);
+			BarController.clienteEntra(cliente.getCpf());
 		} else {
 			BarController.clienteEntra(iptCpf.getText());
 		}
