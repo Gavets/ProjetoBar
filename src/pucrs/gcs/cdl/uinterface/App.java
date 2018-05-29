@@ -23,7 +23,7 @@ public class App extends Application {
 		
 		
 		for(int i = 0; i < 5; i++)
-			BarController.clienteEntra(cs.get(i));
+			BarController.clienteEntra(cs.get(i).getCpf());
 		
 		launch(args);
 	}

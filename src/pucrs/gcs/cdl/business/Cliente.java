@@ -7,10 +7,13 @@ public class Cliente {
 	private boolean genero;
 	private boolean socio;
 	private String numSocio;
-	
-	//private static final boolean MASCULINO = false;
-	//private static final boolean FEMININO = true;
-	
+
+	/*
+	*	MASCULINO = false;
+	*
+	*	FEMININO = true;
+	*/
+
 	public Cliente(String nome, int idade, String cpf, boolean genero) {
 		this(nome, idade, cpf, genero, false, "");
 	}
@@ -28,16 +31,8 @@ public class Cliente {
 		return nome;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
 	public int getIdade() {
 		return idade;
-	}
-
-	public void setIdade(int idade) {
-		this.idade = idade;
 	}
 
 	public String getCpf() {
@@ -52,24 +47,12 @@ public class Cliente {
 		return genero;
 	}
 
-	public void setGenero(boolean genero) {
-		this.genero = genero;
-	}
-
 	public boolean isSocio() {
 		return socio;
 	}
 
-	public void setSocio(boolean socio) {
-		this.socio = socio;
-	}
-
 	public String getNumSocio() {
 		return numSocio;
-	}
-
-	public void setNumSocio(String numSocio) {
-		this.numSocio = numSocio;
 	}
 
 	@Override

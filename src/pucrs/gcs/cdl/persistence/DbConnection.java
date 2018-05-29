@@ -53,25 +53,6 @@ public class DbConnection {
 		return queryInsert(new String(Files.readAllBytes(DB_SQL), StandardCharsets.UTF_8));
 	}
 	
-	public static List<Cliente> getClientes(String filter) throws SQLException, IOException {
-		open();
-		String sql = "SELECT nome, idade, cpf, genero, socio, numSocio FROM Cliente";
-		if(filter != null)
-			sql += " WHERE " + filter;
-		ResultSet rs = querySelect(sql);
-		
-		List<Cliente> clientes = new ArrayList<>();
-		while(rs.next())
-			clientes.add(new Cliente(rs.getString(1), rs.getInt(2), rs.getString(3), rs.getBoolean(4), rs.getBoolean(5), rs.getString(6)));
-		
-		close();
-		return clientes;
-	}
-	
-	public static List<Cliente> getClientes() throws SQLException, IOException {
-		return getClientes(null);
-	}
-	
 	public static List<Cliente> getClientesNoBar(String filter) throws SQLException, IOException {
 		open();				
 		String sql =  "SELECT C.nome, C.idade, C.cpf, C.genero, C.socio, C.numSocio FROM Cliente C"
@@ -102,28 +83,12 @@ public class DbConnection {
 		return queryInsert(sql);
 	}
 	
-	public static int countClientes(String filter) throws SQLException, IOException {
-		String sql = "SELECT COUNT(*) FROM Cliente";
-		if(filter != null)
-			sql += " WHERE " + filter;
-		
-		return queryCount(sql);
-	}
-	
-	public static int countClientes() throws SQLException, IOException {
-		return countClientes(null);
-	}
-	
 	public static int countClientesNoBar(String filter) throws SQLException, IOException {
 		String sql = "SELECT COUNT(*) FROM Bar";
 		if(filter != null)
 			sql += " INNER JOIN Cliente C ON C.cpf = cliente_cpf AND " + filter;
 		
 		return queryCount(sql);
-	}
-	
-	public static int countClientesNoBar() throws SQLException, IOException {
-		return countClientesNoBar(null);
 	}
 	
 	public static int countMulheresNoBar() throws SQLException, IOException {
@@ -139,17 +104,9 @@ public class DbConnection {
 		return queryCount(sql) > 0;
 	}
 	
-	public static boolean isClienteNoBar(Cliente cliente) throws SQLException, IOException {
-		return isClienteNoBar(cliente.getCpf());
-	}
-	
 	public static boolean clienteExists(String cpf) throws SQLException, IOException {
 		String sql = String.format("SELECT COUNT(*) FROM Cliente WHERE cpf = '%s'", cpf);
 		return queryCount(sql) > 0;
-	}
-	
-	public static boolean clienteExists(Cliente cliente) throws SQLException, IOException {
-		return clienteExists(cliente.getCpf());
 	}
 	
 	public static boolean clienteEntra(String cpf) throws SQLException, ClienteJaNoBarException, IOException {		
@@ -160,20 +117,12 @@ public class DbConnection {
 		return queryInsert(sql);
 	}
 	
-	public static boolean clienteEntra(Cliente cliente) throws SQLException, ClienteJaNoBarException, IOException {
-		return clienteEntra(cliente.getCpf());
-	}
-	
 	public static boolean clienteSai(String cpf) throws ClienteForaDoBarException, SQLException, IOException {		
 		if(!isClienteNoBar(cpf))
 			throw new ClienteForaDoBarException();
 
 		String sql = String.format("DELETE FROM Bar WHERE cliente_cpf = '%s'", cpf);
 		return queryInsert(sql);
-	}
-	
-	public static boolean clienteSai(Cliente cliente) throws SQLException, ClienteForaDoBarException, IOException {
-		return clienteSai(cliente.getCpf());
 	}
 	
 	private static ResultSet querySelect(String sql) throws SQLException {
@@ -198,11 +147,4 @@ public class DbConnection {
 		close();
 		return count;
 	}
-	
-	/*
-	private static int queryUpdate(String sql) throws SQLException {
-		PreparedStatement stmt = conn.prepareStatement(sql);
-		return stmt.executeUpdate();
-	}
-	*/
 }

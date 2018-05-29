@@ -46,10 +46,7 @@ public class Home implements Initializable {
 		getPorcentagemMulheres();
 		getPorcentagemSocios();
 	}
-	
-	public void getClientesNoBar() {
-		BarController.consultaClientesNoBar();
-	}
+
 	
 	public void getClientesNoBarCount() {
 		lblClientesNoBar.setText(String.valueOf(BarController.consultaTotalClientesNoBar()));
@@ -63,7 +60,7 @@ public class Home implements Initializable {
 		lblPorcentagemSocios.setText(String.format("%.1f", BarController.consultaPorcentagemSocios()));
 	}
 	
-	public void registrarEntrada(ActionEvent e) {
+	public void registrarEntrada() {
 		try {
 			Parent s = FXMLLoader.load(getClass().getResource("RegistrarEntrada.fxml"));
 			btnRegistrarEntrada.getScene().setRoot(s);
@@ -74,7 +71,7 @@ public class Home implements Initializable {
 		
 	}
 	
-	public void registrarSaida(ActionEvent e) {
+	public void registrarSaida() {
 		try {
 			Parent s = FXMLLoader.load(getClass().getResource("RegistrarSaida.fxml"));
 			btnRegistrarSaida.getScene().setRoot(s);
@@ -84,7 +81,7 @@ public class Home implements Initializable {
 		}
 	}
 	
-	public void exportarArquivo(ActionEvent e) {
+	public void exportarArquivo() {
 		FileChooser dialog = new FileChooser();
 		dialog.setTitle("Salvar arquivo");
 		dialog.setInitialFileName("bar_clientes.csv");

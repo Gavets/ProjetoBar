@@ -50,10 +50,6 @@ public class RegistrarSaida implements Initializable {
 	@FXML
 	private TableColumn<Cliente, String> tclClientesNumSocio;
 	
-	
-	@FXML
-	private Button btnConfirmar;
-	
 	@FXML
 	private Button btnVoltar;
 
@@ -64,65 +60,23 @@ public class RegistrarSaida implements Initializable {
 	
 	public void buildTableClientes() {
 		tclClientesCpf = new TableColumn<>("CPF");
-		tclClientesCpf.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
-			
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
-				// TODO Auto-generated method stub
-				return new SimpleStringProperty(param.getValue().getCpf());
-			}
-		});
+		tclClientesCpf.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getCpf()));
 		
 		tclClientesNome = new TableColumn<>("Nome");
-		tclClientesNome.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
-			
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
-				// TODO Auto-generated method stub
-				return new SimpleStringProperty(param.getValue().getNome());
-			}
-		});
+		tclClientesNome.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNome()));
 		
 		tclClientesIdade = new TableColumn<>("Idade");
-		tclClientesIdade.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
-			
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
-				// TODO Auto-generated method stub
-				return new SimpleStringProperty(String.valueOf(param.getValue().getIdade()));
-			}
-		});
+		tclClientesIdade.setCellValueFactory(param -> new SimpleStringProperty(String.valueOf(param.getValue().getIdade())));
 		
 		tclClientesGenero = new TableColumn<>("Gênero");
-		tclClientesGenero.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
-			
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
-				// TODO Auto-generated method stub
-				return new SimpleStringProperty(param.getValue().getGenero() ? "Feminino" : "Masculino");
-			}
-		});
+		tclClientesGenero.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getGenero() ? "Feminino" : "Masculino"));
 		
 		tclClientesSocio = new TableColumn<>("Sócio");
-		tclClientesSocio.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
-			
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
-				// TODO Auto-generated method stub
-				return new SimpleStringProperty(param.getValue().isSocio() ? "Sim" : "Não");
-			}
-		});
+		tclClientesSocio.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().isSocio() ? "Sim" : "Não"));
 		
 		
 		tclClientesNumSocio = new TableColumn<>("Número sócio");
-		tclClientesNumSocio.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
-			
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
-				// TODO Auto-generated method stub
-				return new SimpleStringProperty(param.getValue().getNumSocio());
-			}
-		});
+		tclClientesNumSocio.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumSocio()));
 		
 		tvwClientesBar.getColumns().setAll(Arrays.asList(tclClientesCpf, tclClientesNome, tclClientesIdade, tclClientesGenero, tclClientesSocio, tclClientesNumSocio));
 		
@@ -146,12 +100,12 @@ public class RegistrarSaida implements Initializable {
 		tvwClientesBar.setItems(filteredListClientes);	
 	}
 
-	public void handleBtnConfirmar(ActionEvent event) {
+	public void handleBtnConfirmar() {
 		BarController.clienteSai(tvwClientesBar.getSelectionModel().getSelectedItem().getCpf());
 		buildTableClientes();
 	}
 	
-	public void handleBtnVoltar(ActionEvent event) {
+	public void handleBtnVoltar() {
 		try {
 			Parent s = FXMLLoader.load(getClass().getResource("Home.fxml"));
 			btnVoltar.getScene().setRoot(s);

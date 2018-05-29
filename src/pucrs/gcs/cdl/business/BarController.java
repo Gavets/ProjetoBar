@@ -27,10 +27,6 @@ public class BarController {
 		return false;
 	}
 	
-	public static boolean clienteEntra(Cliente cliente) {
-		return clienteEntra(cliente.getCpf());
-	}
-	
 	public static boolean clienteSai(String cpf) {
 		try {
 			return DbConnection.clienteSai(cpf);
@@ -40,33 +36,12 @@ public class BarController {
 		return false;
 	}
 	
-	public static boolean clienteSai(Cliente cliente) {
-		return clienteSai(cliente.getCpf());
-	}
-	
 	public static void cadastraCliente(Cliente cliente) {
 		try {
 			DbConnection.putCliente(cliente);
 		} catch (SQLException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
 		}
-	}
-	
-	public static void removeCliente() {
-		
-	}
-	
-	public static void alteraCliente() {
-		
-	}
-	
-	public static List<Cliente> consultaClientes() {
-		try {
-			return DbConnection.getClientes();
-		} catch (SQLException | IOException e) {
-			System.out.println("ERRO: " + e.getMessage());
-		}
-		return Collections.emptyList();
 	}
 	
 	public static List<Cliente> consultaClientesNoBar() {
@@ -87,18 +62,9 @@ public class BarController {
 		return false;
 	}
 	
-	public static boolean clienteEstaNoBar(String cpf) {
-		try {
-			return DbConnection.isClienteNoBar(cpf);
-		} catch (SQLException | IOException e) {
-			System.out.println("ERRO: " + e.getMessage());
-		}
-		return false;
-	}
-	
 	public static int consultaTotalClientesNoBar() {
 		try {
-			return DbConnection.countClientesNoBar();
+			return DbConnection.countClientesNoBar(null);
 		} catch(SQLException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
 		}
@@ -107,7 +73,11 @@ public class BarController {
 	
 	public static double consultaPorcentagemFeminino() {
 		try {
-			int totalClientes = DbConnection.countClientesNoBar();
+			int totalClientes = DbConnection.countClientesNoBar(null);
+
+			if (totalClientes==0)
+			    return 0.0;
+
 			int totalFem = DbConnection.countMulheresNoBar();
 			return (double) totalFem / totalClientes * 100;
 		} catch (SQLException | IOException e) {
@@ -119,7 +89,11 @@ public class BarController {
 	
 	public static double consultaPorcentagemSocios() {
 		try {
-			int totalClientes = DbConnection.countClientesNoBar();
+			int totalClientes = DbConnection.countClientesNoBar(null);
+
+            if (totalClientes==0)
+                return 0.0;
+
 			int totalSocios = DbConnection.countSociosNoBar();
 			return (double) totalSocios / totalClientes * 100;
 		} catch (SQLException | IOException e) {
