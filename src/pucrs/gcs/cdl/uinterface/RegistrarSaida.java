@@ -20,11 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
 import pucrs.gcs.cdl.business.BarController;
@@ -50,6 +46,10 @@ public class RegistrarSaida implements Initializable {
 	@FXML
 	private TableColumn<Cliente, String> tclClientesNumSocio;
 	
+	
+	@FXML
+	private Button btnConfirmar;
+	
 	@FXML
 	private Button btnVoltar;
 
@@ -60,23 +60,65 @@ public class RegistrarSaida implements Initializable {
 	
 	public void buildTableClientes() {
 		tclClientesCpf = new TableColumn<>("CPF");
-		tclClientesCpf.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getCpf()));
+		tclClientesCpf.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
+			
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
+				// TODO Auto-generated method stub
+				return new SimpleStringProperty(param.getValue().getCpf());
+			}
+		});
 		
 		tclClientesNome = new TableColumn<>("Nome");
-		tclClientesNome.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNome()));
+		tclClientesNome.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
+			
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
+				// TODO Auto-generated method stub
+				return new SimpleStringProperty(param.getValue().getNome());
+			}
+		});
 		
 		tclClientesIdade = new TableColumn<>("Idade");
-		tclClientesIdade.setCellValueFactory(param -> new SimpleStringProperty(String.valueOf(param.getValue().getIdade())));
+		tclClientesIdade.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
+			
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
+				// TODO Auto-generated method stub
+				return new SimpleStringProperty(String.valueOf(param.getValue().getIdade()));
+			}
+		});
 		
 		tclClientesGenero = new TableColumn<>("Gênero");
-		tclClientesGenero.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getGenero() ? "Feminino" : "Masculino"));
+		tclClientesGenero.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
+			
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
+				// TODO Auto-generated method stub
+				return new SimpleStringProperty(param.getValue().getGenero() ? "Feminino" : "Masculino");
+			}
+		});
 		
 		tclClientesSocio = new TableColumn<>("Sócio");
-		tclClientesSocio.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().isSocio() ? "Sim" : "Não"));
+		tclClientesSocio.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
+			
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
+				// TODO Auto-generated method stub
+				return new SimpleStringProperty(param.getValue().isSocio() ? "Sim" : "Não");
+			}
+		});
 		
 		
 		tclClientesNumSocio = new TableColumn<>("Número sócio");
-		tclClientesNumSocio.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getNumSocio()));
+		tclClientesNumSocio.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Cliente,String>, ObservableValue<String>>() {
+			
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Cliente, String> param) {
+				// TODO Auto-generated method stub
+				return new SimpleStringProperty(param.getValue().getNumSocio());
+			}
+		});
 		
 		tvwClientesBar.getColumns().setAll(Arrays.asList(tclClientesCpf, tclClientesNome, tclClientesIdade, tclClientesGenero, tclClientesSocio, tclClientesNumSocio));
 		
@@ -100,17 +142,25 @@ public class RegistrarSaida implements Initializable {
 		tvwClientesBar.setItems(filteredListClientes);	
 	}
 
-	public void handleBtnConfirmar() {
-		BarController.clienteSai(tvwClientesBar.getSelectionModel().getSelectedItem().getCpf());
-		buildTableClientes();
+	public void handleBtnConfirmar(ActionEvent event) {
+		if(tvwClientesBar.getSelectionModel().getSelectedItem()==null){
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setContentText("Nenhum cliente foi selecionado para sair!");
+			alert.setTitle("ERRO");
+			alert.showAndWait();
+		}
+		else {
+			BarController.clienteSai(tvwClientesBar.getSelectionModel().getSelectedItem().getCpf());
+			buildTableClientes();
+		}
+
 	}
 	
-	public void handleBtnVoltar() {
+	public void handleBtnVoltar(ActionEvent event) {
 		try {
 			Parent s = FXMLLoader.load(getClass().getResource("Home.fxml"));
 			btnVoltar.getScene().setRoot(s);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}

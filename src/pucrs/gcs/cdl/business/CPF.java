@@ -1,4 +1,4 @@
-package pucrs.gcs.cdl.uinterface;
+package pucrs.gcs.cdl.business;
 
 public class CPF {
     private static final int[] pesoCPF = {11, 10, 9, 8, 7, 6, 5, 4, 3, 2};
