@@ -15,7 +15,6 @@ import pucrs.gcs.cdl.persistence.DbConnection;
 public class BarController {
 	
 	public BarController() {
-		
 	}
 	
 	public static boolean clienteEntra(String cpf) {
@@ -50,14 +49,6 @@ public class BarController {
 		} catch (SQLException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
 		}
-	}
-	
-	public static void removeCliente() {
-		
-	}
-	
-	public static void alteraCliente() {
-		
 	}
 	
 	public static List<Cliente> consultaClientes() {
