@@ -12,10 +12,10 @@ import static org.junit.Assert.*;
 
 public class DbConnectionTest {
 
-    @Before
+    /*@Before
     public void setUp(){
         App.main(new String[0]);
-    }
+    }*/
 
     @Test
     public void getClientes() {

@@ -10,10 +10,10 @@ import static org.junit.Assert.*;
 
 public class CPFTest {
 
-    @Before
+    /*@Before
     public void setUp(){
         App.main(new String[0]);
-    }
+    }*/
 
     @Test
     public void isValidCPF() {

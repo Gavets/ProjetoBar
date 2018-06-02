@@ -184,7 +184,7 @@ public class DbConnection {
 	private static boolean queryInsert(String sql) throws SQLException, IOException {
 		open();
 		PreparedStatement stmt = conn.prepareStatement(sql);
-		boolean result = stmt.execute();
+		boolean result = stmt.executeUpdate() > 0;
 		close();
 		return result;
 	}

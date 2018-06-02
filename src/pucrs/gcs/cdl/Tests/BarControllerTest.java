@@ -12,27 +12,26 @@ import static org.junit.Assert.*;
 
 public class BarControllerTest {
 
-    @Before
+    /*@Before
     public void setUp(){
         App.main(new String[0]);
-    }
+    }*/
 
     @org.junit.Test
     public void clienteEntra() {
-        String cpf = "02044556006";
+        String cpf = "70558679242";
         boolean aux = BarController.clienteEntra(cpf);
 
-        assertEquals(true, aux);
+        assertTrue(aux);
     }
 
 
     @org.junit.Test
     public void clienteSai() {
-        String cpf = "54581431247";
-
+        String cpf = "70558679242";
         boolean aux = BarController.clienteSai(cpf);
 
-        assertEquals(true, aux);
+        assertTrue(aux);
 
     }
 
@@ -40,14 +39,14 @@ public class BarControllerTest {
     public void consultaClientes() {
         List<Cliente> aux = BarController.consultaClientes();
 
-        assertEquals(false, aux.isEmpty());
+        assertFalse(aux.isEmpty());
     }
 
     @org.junit.Test
     public void consultaClientesNoBar() {
         List<Cliente> aux = BarController.consultaClientes();
 
-        assertEquals(false, aux.isEmpty());
+        assertFalse(aux.isEmpty());
     }
 
     @org.junit.Test
@@ -55,7 +54,7 @@ public class BarControllerTest {
 
         boolean aux = BarController.clienteExists("54581431247");
 
-        assertEquals(true, aux);
+        assertTrue(aux);
 
     }
 
@@ -63,27 +62,27 @@ public class BarControllerTest {
     public void clienteEstaNoBar() {
         boolean aux = BarController.clienteEstaNoBar("54581431247");
 
-        assertEquals(true, aux);
+        assertTrue(aux);
     }
 
     @org.junit.Test
     public void consultaTotalClientesNoBar() {
         int aux = BarController.consultaTotalClientesNoBar();
 
-        assertEquals(7, aux);
+        assertEquals(8, aux);
     }
 
     @org.junit.Test
     public void consultaPorcentagemFeminino() {
         double aux = BarController.consultaPorcentagemFeminino();
 
-        assertEquals(57.1,aux);
+        assertEquals(57.1, aux, 0.1);
     }
 
     @org.junit.Test
     public void consultaPorcentagemSocios() {
         double aux = BarController.consultaPorcentagemSocios();
 
-        assertEquals(14.3, aux);
+        assertEquals(14.3, aux, 0.1);
     }
 }
