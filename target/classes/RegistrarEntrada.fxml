@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="360.0" styleClass="default" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pucrs.gcs.cdl.uinterface.RegistrarEntrada">
+   <children>
+      <ImageView fitHeight="42.0" fitWidth="53.0" layoutX="257.0" layoutY="40.0">
+         <image>
+            <Image url="@lights.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="42.0" fitWidth="53.0" layoutX="310.0" layoutY="40.0">
+         <image>
+            <Image url="@lights.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="42.0" fitWidth="53.0" layoutX="204.0" layoutY="40.0">
+         <image>
+            <Image url="@lights.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="42.0" fitWidth="53.0" layoutX="151.0" layoutY="40.0">
+         <image>
+            <Image url="@lights.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="42.0" fitWidth="53.0" layoutX="103.0" layoutY="40.0">
+         <image>
+            <Image url="@lights.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="42.0" fitWidth="53.0" layoutX="50.0" layoutY="40.0">
+         <image>
+            <Image url="@lights.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="42.0" fitWidth="53.0" layoutX="-3.0" layoutY="40.0">
+         <image>
+            <Image url="@lights.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="88.0" layoutY="14.0" styleClass="title" stylesheets="@style.css" text="Registrar Entrada" />
+      <Label layoutX="21.0" layoutY="91.0" style="-fx-font-family: Roboto; -fx-font-size: 14; -fx-pref-width: 320; -fx-wrap-text: true;" text="Informe o CPF do cliente. Caso este não esteja cadastrado, informe os demais dados necessários nos campos que aparecerão." />
+      <TextField fx:id="iptCpf" layoutX="22.0" layoutY="157.0" onKeyReleased="#validaCpf" prefHeight="25.0" prefWidth="320.0" promptText="CPF" styleClass="textInput" />
+      <TextField fx:id="iptNome" layoutX="20.0" layoutY="212.0" prefHeight="25.0" prefWidth="320.0" promptText="Nome" styleClass="textInput" visible="false" />
+      <TextField fx:id="iptIdade" layoutX="20.0" layoutY="268.0" promptText="Idade" styleClass="textInput" visible="false" />
+      <ComboBox fx:id="cbxGenero" layoutX="187.0" layoutY="268.0" prefWidth="150.0" promptText="Gênero" styleClass="textInput" visible="false" />
+      <ComboBox fx:id="cbxSocio" layoutX="23.0" layoutY="329.0" prefWidth="150.0" promptText="Sócio" styleClass="textInput" visible="false" />
+      <TextField fx:id="iptNumSocio" layoutX="185.0" layoutY="329.0" promptText="Número de sócio" styleClass="textInput" visible="false" />
+      <JFXButton fx:id="btnRegistrar" layoutX="62.0" layoutY="481.0" onAction="#handleBtnRegistrar" styleClass="titleButton" text="Registrar" />
+      <JFXButton fx:id="btnVoltar" layoutX="62.0" layoutY="557.0" onAction="#handleBtnVoltar" styleClass="titleButton" text="Voltar" />
+   </children>
+</AnchorPane>
