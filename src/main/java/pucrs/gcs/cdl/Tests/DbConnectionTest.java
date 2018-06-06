@@ -1,21 +1,14 @@
 package pucrs.gcs.cdl.Tests;
 
-import org.junit.Before;
 import org.junit.Test;
 import pucrs.gcs.cdl.business.Cliente;
 import pucrs.gcs.cdl.persistence.DbConnection;
-import pucrs.gcs.cdl.uinterface.App;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class DbConnectionTest {
-
-    /*@Before
-    public void setUp(){
-        App.main(new String[0]);
-    }*/
 
     @Test
     public void getClientes() {
