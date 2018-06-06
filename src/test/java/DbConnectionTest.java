@@ -1,4 +1,4 @@
-package pucrs.gcs.cdl.Tests;
+
 
 import org.junit.Test;
 import pucrs.gcs.cdl.business.Cliente;
@@ -60,7 +60,7 @@ public class DbConnectionTest {
     public void putCliente() {
         boolean aux;
         try {
-          aux = DbConnection.putCliente(new Cliente("jose", 19, "266.610.847-31", false));
+          aux = DbConnection.putCliente(new Cliente("jose", 19, "26661084731", false));
        }catch (Exception e){
            aux = false;
        }
