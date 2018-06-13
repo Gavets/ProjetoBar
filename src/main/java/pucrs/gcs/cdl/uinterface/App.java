@@ -21,7 +21,7 @@ public class App extends Application {
 		for(Cliente c : cs)
 			BarController.cadastraCliente(c);
 
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 8; i++)
 			BarController.clienteEntra(cs.get(i));
 		
 		launch(args);

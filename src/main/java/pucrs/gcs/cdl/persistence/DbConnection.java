@@ -34,8 +34,11 @@ public class DbConnection {
 		if(conn == null || conn.isClosed())
 			conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
 		
-		if(!tableExists())
-			createTable();
+		if(!tableExists()) {
+			PreparedStatement stmt = conn.prepareStatement(new String(Files.readAllBytes(DB_SQL), StandardCharsets.UTF_8));
+			stmt.executeUpdate();
+			stmt.close();
+		}
 	}
 	
 	private static void close() throws SQLException {
@@ -47,10 +50,6 @@ public class DbConnection {
 		DatabaseMetaData meta = conn.getMetaData();
 		ResultSet rs = meta.getTables(null, null, "CLIENTE", null);
 		return rs.next();
-	}
-	
-	private static boolean createTable() throws SQLException, IOException {
-		return queryInsert(new String(Files.readAllBytes(DB_SQL), StandardCharsets.UTF_8));
 	}
 	
 	public static List<Cliente> getClientes(String filter) throws SQLException, IOException {
