@@ -31,8 +31,8 @@ pipeline {
                         archive 'target*//*.jar'
                     }
 
-            }
-        }
+				}
+			}
         stage('Teste') {
             steps {
                 echo 'Passo de teste automatizado!' 
@@ -43,6 +43,7 @@ pipeline {
                 echo 'Passo de deploy!' 
             }
         }
+		}
     }
 }
-}
+
