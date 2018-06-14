@@ -17,7 +17,7 @@ pipeline {
 				steps {
 				
 					//script {
-						bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=false clean package/)
+						sh("mvn clean package")
 							//def pom = readMavenPom file: 'pom.xml'
 //							print pom.version
 					//}
