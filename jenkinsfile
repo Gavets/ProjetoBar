@@ -17,7 +17,7 @@ pipeline {
 				steps {
 				
 					//script {
-						sh("mvn clean package")
+						bat("mvn clean package")
 							//def pom = readMavenPom file: 'pom.xml'
 //							print pom.version
 					//}
