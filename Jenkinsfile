@@ -29,6 +29,7 @@ pipeline {
                         print pom.version
                         junit '**//*target/surefire-reports/TEST-*.xml'
                         archive 'target*//*.jar'
+                    }
 
             }
         }
@@ -44,5 +45,4 @@ pipeline {
         }
     }
 }
-    }
-}
+
