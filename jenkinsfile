@@ -24,27 +24,23 @@ pipeline {
 					bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
                         def pom = readMavenPom file: 'pom.xml'
                         print pom.version
-                        Configurar======================>junit '**//*target/surefire-reports/TEST-*.xml'
-                        Configurar======================>archive 'target*//*.jar'
                 }
             }
 
         }
 		
-		stage('Integration tests') {
-		
-            steps {
-                script {
-                    def mvnHome = tool 'Maven 3.3.9'
+	//	stage('Integration tests') {
+		//
+          //  steps {
+            //    script {
+              //      def mvnHome = tool 'Maven 3.3.9'
                    
-                    bat(/"${mvnHome}\bin\mvn" verify -Dunit-tests.skip=true/)
+                //    bat(/"${mvnHome}\bin\mvn" verify -Dunit-tests.skip=true/)
                     
 
-                }
-				
-                Configurar(?)===============>cucumber buildStatus: null, fileIncludePattern: '**/cucumber.json', jsonReportDirectory: 'target', sortingMethod: 'ALPHABETICAL'
-            }
-		}
+//                }
+      //      }
+	//	}
 		
 		//stage('Test') {
           //  steps {
