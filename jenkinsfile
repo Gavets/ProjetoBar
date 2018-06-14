@@ -8,36 +8,29 @@ pipeline {
 	
 	stages {
 
-        stage('Build with unit testing') {
+        stage('Build') {
             steps {
 			
                 script {
-                    echo 'Pulling...' + env.BRANCH_NAME
-                    def mvnHome = tool 'Maven 3.3.9'
 					bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
-                        def pom = readMavenPom file: 'pom.xml'
-                        print pom.version
-                        Configurar======================>junit '**//*target/surefire-reports/TEST-*.xml'
-                        Configurar======================>archive 'target*//*.jar'
+                        def pom = readMavenPom file: pom.xml
                 }
             }
 
         }
 		
-		stage('Integration tests') {
+		//stage('Teste') {
 		
-            steps {
-                script {
-                    def mvnHome = tool 'Maven 3.3.9'
+            //steps {
+                //script {
+                //    def mvnHome = tool 'Maven 3.7.0'
                    
-                    bat(/"${mvnHome}\bin\mvn" verify -Dunit-tests.skip=true/)
+              //      bat(/"${mvnHome}\bin\mvn" verify -Dunit-tests.skip=true/)
                     
 
-                }
-				
-                Configurar(?)===============>cucumber buildStatus: null, fileIncludePattern: '**/cucumber.json', jsonReportDirectory: 'target', sortingMethod: 'ALPHABETICAL'
-            }
-		}
+            //    }
+          //  }
+		//}
 		
 		//stage('Test') {
           //  steps {
