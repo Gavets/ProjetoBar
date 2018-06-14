@@ -63,20 +63,20 @@ public class BarControllerTest {
     public void consultaTotalClientesNoBar() {
         int aux = BarController.consultaTotalClientesNoBar();
 
-        assertEquals(9, aux);
+        assertEquals(8, aux);
     }
 
     @Test
     public void consultaPorcentagemFeminino() {
         double aux = BarController.consultaPorcentagemFeminino();
 
-        assertEquals(62.5, aux, 0.1);
+        assertEquals(57.1, aux, 0.1);
     }
 
     @Test
     public void consultaPorcentagemSocios() {
         double aux = BarController.consultaPorcentagemSocios();
 
-        assertEquals(0, aux, 0.1);
+        assertEquals(14.2, aux, 0.1);
     }
 }
