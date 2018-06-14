@@ -1,37 +1,31 @@
 pipeline {
-	agent none 
+	agent any 
 		
 	environment {
 		EMAIL_RECIPIENTS = 'joao.severo@acad.pucrs,arthur.bueno@acad.pucrs.br'
 	}
 		
 	stages {
-		stage ('Checkout') {
-			agent any
-			steps {
+		
+		stage ('Checkout'){
+			steps{
 				deleteDir()	
 				checkout scm
 			}
 		}
-		stage('Build with unit testing - Windows') {
-			agent {
-				label 'windows'
-			}
-			steps {
+		stage('Build with unit testing') {
+			//steps {
 				//script {
-					bat("mvn clean package")
+					if (isUnix()) {
+						sh "mvn clean package"
+					} else {
+						bat("mvn clean package")
+					}
 					//def pom = readMavenPom file: 'pom.xml'
 					// print pom.version
 				//}
-			}
+			//}
 		}
-		stage('Build with unit testing - Linux') {
-			agent {
-				label 'linux'
-			}
-			steps {
-				sh 'mvn clean package'
-			}
 	}
 }
 		
