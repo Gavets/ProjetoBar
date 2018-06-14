@@ -19,9 +19,7 @@ pipeline {
             steps {
 			
                 script {
-                    echo 'Pulling...' + env.BRANCH_NAME
-                    def mvnHome = tool 'Maven 3.7.0'
-					bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=true clean package/)
+					bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=false clean package/)
                         def pom = readMavenPom file: 'pom.xml'
                         print pom.version
                 }
