@@ -46,7 +46,7 @@
 				sendEmail("Failed");
 			}
 		}
-
+	}
 		@NonCPS
 		def getChangeString() {
 			MAX_MSG_LEN = 100
@@ -76,4 +76,4 @@
 				subject: "Build $BUILD_NUMBER - " + status + " (${currentBuild.fullDisplayName})",
 				body: "Changes:\n " + getChangeString() + "\n\n Check console output at: $BUILD_URL/console" + "\n")
 		}
-	}
+	
