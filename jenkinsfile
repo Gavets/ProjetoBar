@@ -14,21 +14,18 @@ pipeline {
 			}
 		}
 		stage('Build with unit testing') {
-				steps {
-				
-					//script {
-						if(isUnix()) {
-							sh "mvn clean package"
-						} else {
-							bat("mvn clean package")
-						}
-							//def pom = readMavenPom file: 'pom.xml'
-//							print pom.version
-					//}
-				}
-			
+			steps {
+				//script {
+					if (isUnix()) {
+						sh "mvn clean package"
+					} else {
+						bat("mvn clean package")
+					}
+					//def pom = readMavenPom file: 'pom.xml'
+					// print pom.version
+				//}
+			}
 		}
-			
 	}
 }
 		
