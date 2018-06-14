@@ -27,29 +27,7 @@ pipeline {
 
         }
 		
-	//	stage('Integration tests') {
-		//
-          //  steps {
-            //    script {
-              //      def mvnHome = tool 'Maven 3.3.9'
-                   
-                //    bat(/"${mvnHome}\bin\mvn" verify -Dunit-tests.skip=true/)
-                    
 
-//                }
-      //      }
-	//	}
-		
-		//stage('Test') {
-          //  steps {
-                /* `make check` returns non-zero on test failures,
-                * using `true` to allow the Pipeline to continue nonetheless
-                */
-            //    sh 'make check || true' 
-            //    junit '**/target/*.xml' 
-            //}
-        //}
-	//}
 		
 	post {
 		always {
