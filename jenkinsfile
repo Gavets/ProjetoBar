@@ -8,9 +8,10 @@ pipeline {
 	stages {
 		
 		stage ('Checkout'){
+			steps{
 				deleteDir()	
 				checkout scm
-			
+			}
 		}
 		stage('Build with unit testing') {
 				steps {
