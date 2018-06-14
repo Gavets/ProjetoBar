@@ -1,77 +1,78 @@
-pipeline {
+	pipeline {
 
-    agent { label 'java8' }
-	
-    environment {
-        EMAIL_RECIPIENTS = 'joao.severo@acad.pucrs,arthur.bueno@acad.pucrs.br'
-    }
-	
-	stages {
-	
-
-		stage ('Checkout'){
-			node('slave') {
-			deleteDir()
-			checkout scm
+		agent { label 'java8' }
+		
+		environment {
+			EMAIL_RECIPIENTS = 'joao.severo@acad.pucrs,arthur.bueno@acad.pucrs.br'
 		}
+		
+		stages {
+		
 
-        stage('Build with unit testing') {
-            steps {
+			stage ('Checkout'){
+				node('slave') {
+				deleteDir()
+				checkout scm
+			}
+
+			stage('Build with unit testing') {
+				steps {
+				
+					script {
+						bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=false clean package/)
+							def pom = readMavenPom file: 'pom.xml'
+							print pom.version
+					}
+				}
+
+			}
 			
-                script {
-					bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=false clean package/)
-                        def pom = readMavenPom file: 'pom.xml'
-                        print pom.version
-                }
-            }
-
-        }
-		
-
-		
-	post {
-		always {
-			deleteDir()
 		}
-		success {
-			sendEmail("Successful");
-		}
-		unstable {
-			sendEmail("Unstable");
-		}
-		failure {
-			sendEmail("Failed");
-		}
-	}
-
-	@NonCPS
-	def getChangeString() {
-		MAX_MSG_LEN = 100
-		def changeString = ""
-
-		echo "Gathering SCM changes"
-		def changeLogSets = currentBuild.changeSets
-		for (int i = 0; i < changeLogSets.size(); i++) {
-			def entries = changeLogSets[i].items
-			for (int j = 0; j < entries.length; j++) {
-				def entry = entries[j]
-				truncated_msg = entry.msg.take(MAX_MSG_LEN)
-				changeString += " - ${truncated_msg} [${entry.author}]\n"
+			
+	
+			
+		post {
+			always {
+				deleteDir()
+			}
+			success {
+				sendEmail("Successful");
+			}
+			unstable {
+				sendEmail("Unstable");
+			}
+			failure {
+				sendEmail("Failed");
 			}
 		}
 
-		if (!changeString) {
-			changeString = " - No new changes"
+		@NonCPS
+		def getChangeString() {
+			MAX_MSG_LEN = 100
+			def changeString = ""
+
+			echo "Gathering SCM changes"
+			def changeLogSets = currentBuild.changeSets
+			for (int i = 0; i < changeLogSets.size(); i++) {
+				def entries = changeLogSets[i].items
+				for (int j = 0; j < entries.length; j++) {
+					def entry = entries[j]
+					truncated_msg = entry.msg.take(MAX_MSG_LEN)
+					changeString += " - ${truncated_msg} [${entry.author}]\n"
+				}
+			}
+
+			if (!changeString) {
+				changeString = " - No new changes"
+			}
+			return changeString
 		}
-		return changeString
-	}
 
 
-	def sendEmail(status) {
-		mail(
-			to: "$EMAIL_RECIPIENTS",
-			subject: "Build $BUILD_NUMBER - " + status + " (${currentBuild.fullDisplayName})",
-			body: "Changes:\n " + getChangeString() + "\n\n Check console output at: $BUILD_URL/console" + "\n")
-	}
-}
+		def sendEmail(status) {
+			mail(
+				to: "$EMAIL_RECIPIENTS",
+				subject: "Build $BUILD_NUMBER - " + status + " (${currentBuild.fullDisplayName})",
+				body: "Changes:\n " + getChangeString() + "\n\n Check console output at: $BUILD_URL/console" + "\n")
+		}
 	}
