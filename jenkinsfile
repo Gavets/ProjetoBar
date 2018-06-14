@@ -14,7 +14,7 @@ pipeline {
 			}
 		}
 		stage('Build with unit testing') {
-			//steps {
+			steps {
 				//script {
 					if (isUnix()) {
 						sh "mvn clean package"
@@ -24,7 +24,7 @@ pipeline {
 					//def pom = readMavenPom file: 'pom.xml'
 					// print pom.version
 				//}
-			//}
+			}
 		}
 	}
 }
