@@ -8,22 +8,20 @@ pipeline {
 	stages {
 		
 		stage ('Checkout'){
-			node('slave') {
 				deleteDir()	
 				checkout scm
-			}
+			
 		}
 		stage('Build with unit testing') {
-			node('slave'){
 				steps {
 				
-					script {
+					//script {
 						bat(/"${mvnHome}\bin\mvn" -Dintegration-tests.skip=false clean package/)
 							def pom = readMavenPom file: 'pom.xml'
 							print pom.version
-					}
+					//}
 				}
-			}
+			
 		}
 			
 	}
