@@ -1,7 +1,4 @@
 pipeline {
-
-    agent { label 'java8' }
-	
     environment {
         EMAIL_RECIPIENTS = 'arthur.bueno@acad.pucrs.br'
     	}
@@ -9,19 +6,19 @@ pipeline {
 	stages {
         	stage('Build') {
 			steps{
-				print 'Stage de build'
+				echo 'Stage de build'
         		}
 		}
 		
 		stage('Testes') {
 			steps{
-				print 'Stage de Teste Unitário'
+				echo 'Stage de Teste Unitário'
 			}
 		}
 		
 		stage('Deploy') {
 			steps{
-				print 'Stage de Deploy'
+				echo 'Stage de Deploy'
 			}
         	}
 	}
