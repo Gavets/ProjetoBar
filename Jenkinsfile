@@ -1,21 +1,22 @@
 pipeline {
     agent any 
     stages {
-        stage('Build') { 
+        stage(Build) { 
             steps {
-                echo 'Gerando build'
-                bat "git clone https://github.com/Gavets/ProjetoBar.git ProjetoBar"
+                echo Gerando build
+                bat git clone https://github.com/Gavets/ProjetoBar.git ProjetoBar
             }
         }
-        stage('Test') { 
+        stage(Teste Unitario) { 
             steps {
-                echo 'Rodando testes unitários'
-                bat "mvn -f ./ProjetoBar clean test"
+                echo Rodando testes unitários'
+                bat mvn -f ./ProjetoBar clean test
             }
         }
-        stage('Deploy') { 
+        stage(Deploy) { 
             steps {
-                echo 'Em construção...'
+                echo Em construcao...
+                
             }
         }
     }
