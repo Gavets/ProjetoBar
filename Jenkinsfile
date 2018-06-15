@@ -40,4 +40,5 @@ pipeline {
         failure {
             sendEmail("Failed");
         }
+    }
 }
