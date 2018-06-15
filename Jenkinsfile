@@ -3,36 +3,26 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                echo 'Gerando build'
-                bat 'git clone https://github.com/Gavets/ProjetoBar.git'
+                echo 'Gerando build...'
+                bat 'git clone https://github.com/Gavets/ProjetoBar.git ProjetoBar'
+                bat 'mvn -f ./ProjetoBar clean package'
             }
         }
         stage('Teste Unitario') { 
             steps {
-                echo 'Rodando testes unitários'
-                bat 'mvn -f ./ProjetoBar clean test'
+                echo 'Rodando testes unitarios...'
+                bat 'mvn -f ./ProjetoBar test'
             }
         }
         stage('Deploy') { 
             steps {
-                echo 'Em construcao...'
-                emailext body: '', recipientProviders: [culprits()], subject: '', to: 'arthur.bueno@acad.pucrs.br'
-                
+                echo 'Em construcao...'                
             }
         }
     }
     post {
         always {
             deleteDir()
-        }
-        success {
-            mail bcc: '', body: '(${currentBuild.fullDisplayName})', cc: '', from: '', replyTo: '', subject: 'Pipeline GCS - Status', to: 'arthur.bueno@acad.pucrs'
-        }
-        unstable {
-            sendEmail("Unstable");
-        }
-        failure {
-            sendEmail("Failed");
         }
     }
 }
