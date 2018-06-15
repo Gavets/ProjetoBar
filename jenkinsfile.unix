@@ -1,0 +1,22 @@
+pipeline {
+	agent any 
+		
+	environment {
+		EMAIL_RECIPIENTS = 'joao.severo@acad.pucrs,arthur.bueno@acad.pucrs.br'
+	}
+		
+	stages {
+		stage ('Checkout'){
+			steps{
+				deleteDir()	
+				checkout scm
+			}
+		}
+		stage('Build with unit testing') {
+			steps {
+				sh "mvn clean package"
+			}
+		}
+	}
+}
+		
