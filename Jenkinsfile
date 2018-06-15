@@ -4,7 +4,7 @@ pipeline {
         stage('Build') { 
             steps {
                 echo 'Gerando build'
-                bat 'git clone https://github.com/Gavets/ProjetoBar.git ProjetoBar'
+                bat 'git clone https://github.com/Gavets/ProjetoBar.git'
             }
         }
         stage('Teste Unitario') { 
