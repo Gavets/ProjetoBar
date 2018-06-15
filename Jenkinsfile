@@ -6,7 +6,7 @@ pipeline {
                 deleteDir()
                 echo 'Gerando build...'
                 bat 'git clone https://github.com/Gavets/ProjetoBar.git ProjetoBar'
-                bat 'mvn -f ./ProjetoBar clean package'
+                bat 'mvn -Dmaven.test.skip=true -f ./ProjetoBar clean package'
             }
         }
         stage('Teste Unitario') { 
@@ -18,7 +18,8 @@ pipeline {
         stage('Deploy') { 
             steps {
                 echo 'Em construcao...'
-                bat 'copy /y "C:/Program Files (x86)/Jenkins/workspace/GCS - Teste/ProjetoBar/target/ProjetoBar-1.0-SNAPSHOT-jar-with-dependencies.jar" C:/Users/arthu/intellijProject/ProjetoBar/target/'
+				if not exist "%USERPROFILE%\\intellijProject\\ProjetoBar\\target" mkdir "%USERPROFILE%\\intellijProject\\ProjetoBar\\target"
+				bat 'copy /y "ProjetoBar\\target\\*.jar" "%USERPROFILE%\\intellijProject\\ProjetoBar\\target"'
             }
         }
     }
