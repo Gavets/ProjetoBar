@@ -4,21 +4,21 @@ pipeline {
 	
     environment {
         EMAIL_RECIPIENTS = 'arthur.bueno@acad.pucrs.br'
-    }
+    	}
 	
 	stages {
 
-        stage('Build with unit testing') {
-    
-        }
+        	stage('Build') {
+    			print 'Stage de build'
+        	}
 		
 		stage('Testes') {
-
+			print 'Stage de Teste Unitário'
 		}
 		
 		stage('Deploy') {
-
-        }
+			print 'Stage de Deploy'
+        	}
 	}
 		
 		post {
