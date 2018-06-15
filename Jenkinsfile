@@ -18,7 +18,7 @@ pipeline {
         stage('Deploy') { 
             steps {
                 echo 'Em construcao...'
-                C:\Users\arthu>move "C:\Program Files (x86)\Jenkins\workspace\GCS - Teste\ProjetoBar\target\ProjetoBar-1.0-SNAPSHOT-jar-with-dependencies.jar" C:\Users\arthu\intellijProject\ProjetoBar\target\
+                bat 'C:\Users\arthu>move "C:\Program Files (x86)\Jenkins\workspace\GCS - Teste\ProjetoBar\target\ProjetoBar-1.0-SNAPSHOT-jar-with-dependencies.jar" C:\Users\arthu\intellijProject\ProjetoBar\target\'
             }
         }
     }
