@@ -18,7 +18,7 @@ pipeline {
         stage('Deploy') { 
             steps {
                 echo 'Em construcao...'
-				if not exist "%USERPROFILE%\\intellijProject\\ProjetoBar\\target" mkdir "%USERPROFILE%\\intellijProject\\ProjetoBar\\target"
+				bat 'if not exist "%USERPROFILE%\\intellijProject\\ProjetoBar\\target" mkdir "%USERPROFILE%\\intellijProject\\ProjetoBar\\target"'
 				bat 'copy /y "ProjetoBar\\target\\*.jar" "%USERPROFILE%\\intellijProject\\ProjetoBar\\target"'
             }
         }
