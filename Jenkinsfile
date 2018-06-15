@@ -1,25 +1,20 @@
 pipeline {
-    environment {
-        EMAIL_RECIPIENTS = 'arthur.bueno@acad.pucrs.br'
-    	}
-	
-	stages {
-        	stage('Build') {
-			steps{
-				echo 'Stage de build'
-        		}
-		}
-		
-		stage('Testes') {
-			steps{
-				echo 'Stage de Teste Unitário'
-			}
-		}
-		
-		stage('Deploy') {
-			steps{
-				echo 'Stage de Deploy'
-			}
-        	}
-	}
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                echo 'Gerando build'
+            }
+        }
+        stage('Test') { 
+            steps {
+                echo 'Rodando testes unitários'
+            }
+        }
+        stage('Deploy') { 
+            steps {
+                echo 'Em construção...'
+            }
+        }
+    }
 }
