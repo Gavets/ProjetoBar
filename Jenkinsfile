@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        EMAIL_RECIPIENTS = 'mahmoud.romeh@test.com'
+        EMAIL_RECIPIENTS = 'arthur.bueno@acad.pucrs.br'
     }
     stages {
         stage('Build') { 
@@ -33,6 +33,7 @@ pipeline {
         }
         success {
             sendEmail("Successful");
+            mail bcc: '', body: '(${currentBuild.fullDisplayName})', cc: '', from: '', replyTo: '', subject: 'Pipeline GCS - Status', to: 'arthur.bueno@acad.pucrs'
         }
         unstable {
             sendEmail("Unstable");
@@ -41,4 +42,11 @@ pipeline {
             sendEmail("Failed");
         }
     }
+}
+
+def sendEmail(status) {
+    mail(
+            to: "$EMAIL_RECIPIENTS",
+            subject: "Build GCS - " + status + " (${currentBuild.fullDisplayName})",
+            body: "Changes:\n " + getChangeString() + "\n\n Check console output at: $BUILD_URL/console" + "\n")
 }
