@@ -48,5 +48,5 @@ def sendEmail(status) {
     mail(
             to: "$EMAIL_RECIPIENTS",
             subject: "Build GCS - " + status + " (${currentBuild.fullDisplayName})",
-            body: "Changes:\n " + getChangeString() + "\n\n Check console output at: $BUILD_URL/console" + "\n")
+        body: "Changes:\n " + ${BUILD_DISPLAY_NAME} + "\n\n Check console output at: $BUILD_URL/console" + "\n")
 }
