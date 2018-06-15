@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
+import pucrs.gcs.cdl.exception.ClienteJaCadastradoException;
 import pucrs.gcs.cdl.exception.ClienteJaNoBarException;
 import pucrs.gcs.cdl.exception.ClienteForaDoBarException;
 import pucrs.gcs.cdl.persistence.DbConnection;
@@ -20,8 +21,10 @@ public class BarController {
 	public static boolean clienteEntra(String cpf) {
 		try {
 			return DbConnection.clienteEntra(cpf);
-		} catch (SQLException | ClienteJaNoBarException | IOException e) {
+		} catch (SQLException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
+		} catch (ClienteJaNoBarException e) {
+			//System.out.println("ERRO: " + e.getMessage());
 		}
 		return false;
 	}
@@ -45,9 +48,13 @@ public class BarController {
 	
 	public static void cadastraCliente(Cliente cliente) {
 		try {
+			if(DbConnection.clienteExists(cliente))
+				throw new ClienteJaCadastradoException();
 			DbConnection.putCliente(cliente);
 		} catch (SQLException | IOException e) {
 			System.out.println("ERRO: " + e.getMessage());
+		} catch (ClienteJaCadastradoException e) {
+			//System.out.println("ERRO: " + e.getMessage());
 		}
 	}
 	

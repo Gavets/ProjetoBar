@@ -1,14 +1,21 @@
 
 
+import org.junit.Before;
 import org.junit.Test;
 import pucrs.gcs.cdl.business.Cliente;
 import pucrs.gcs.cdl.persistence.DbConnection;
+import pucrs.gcs.cdl.uinterface.App;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class DbConnectionTest {
+
+    @Before
+    public void encheBar() {
+        App.encheBar();
+    }
 
     @Test
     public void getClientes() {
@@ -19,7 +26,7 @@ public class DbConnectionTest {
             aux = false;
         }
 
-        assertEquals(true, aux);
+        assertTrue(aux);
     }
 
     @Test
@@ -30,7 +37,7 @@ public class DbConnectionTest {
         }catch (Exception e){
         }
 
-        assertEquals(false, aux.isEmpty());
+        assertFalse(aux.isEmpty());
     }
 
     @Test
@@ -42,7 +49,7 @@ public class DbConnectionTest {
             aux = false;
         }
 
-        assertEquals(true, aux);
+        assertTrue(aux);
     }
 
     @Test
@@ -53,18 +60,22 @@ public class DbConnectionTest {
         }catch (Exception e){
         }
 
-        assertEquals(false, aux.isEmpty());
+        assertFalse(aux.isEmpty());
     }
 
     @Test
     public void putCliente() {
         boolean aux;
+        Cliente c;
         try {
-          aux = DbConnection.putCliente(new Cliente("jose", 19, "26661084731", false));
+            c = new Cliente("jose", 19, "26661084731", false);
+            DbConnection.removeCliente(c);
+            aux = DbConnection.putCliente(c);
+            DbConnection.removeCliente(c);
        }catch (Exception e){
            aux = false;
        }
 
-       assertEquals(true, aux);
+        assertTrue(aux);
     }
 }

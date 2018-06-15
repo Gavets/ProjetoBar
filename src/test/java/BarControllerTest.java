@@ -1,33 +1,24 @@
 
 
 
+import org.junit.Before;
 import org.junit.Test;
 import pucrs.gcs.cdl.business.BarController;
 import pucrs.gcs.cdl.business.Cliente;
+import pucrs.gcs.cdl.uinterface.App;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public class BarControllerTest {
+    String cpf = "54581431247";
 
-    @Test
-    public void clienteEntra() {
-        String cpf = "70558679242";
-        boolean aux = BarController.clienteEntra(cpf);
-
-        assertTrue(aux);
+    @Before
+    public void encheBar() {
+        App.encheBar();
     }
 
-
-    @Test
-    public void clienteSai() {
-        String cpf = "70558679242";
-        boolean aux = BarController.clienteSai(cpf);
-
-        assertTrue(aux);
-
-    }
 
     @Test
     public void consultaClientes() {
@@ -46,7 +37,7 @@ public class BarControllerTest {
     @Test
     public void clienteExists() {
 
-        boolean aux = BarController.clienteExists("54581431247");
+        boolean aux = BarController.clienteExists(cpf);
 
         assertTrue(aux);
 
@@ -54,7 +45,25 @@ public class BarControllerTest {
 
     @Test
     public void clienteEstaNoBar() {
-        boolean aux = BarController.clienteEstaNoBar("54581431247");
+        BarController.clienteEntra(cpf);
+        boolean aux = BarController.clienteEstaNoBar(cpf);
+
+        assertTrue(aux);
+    }
+
+    @Test
+    public void clienteSai() {
+        BarController.clienteEntra(cpf);
+        boolean aux = BarController.clienteSai(cpf);
+
+        assertTrue(aux);
+
+    }
+
+    @Test
+    public void clienteEntra() {
+        BarController.clienteSai(cpf);
+        boolean aux = BarController.clienteEntra(cpf);
 
         assertTrue(aux);
     }
@@ -62,21 +71,27 @@ public class BarControllerTest {
     @Test
     public void consultaTotalClientesNoBar() {
         int aux = BarController.consultaTotalClientesNoBar();
+        int c = BarController.consultaClientesNoBar().size();
 
-        assertEquals(8, aux);
+        assertEquals(c, aux);
     }
 
     @Test
     public void consultaPorcentagemFeminino() {
         double aux = BarController.consultaPorcentagemFeminino();
+        List<Cliente> cs = BarController.consultaClientesNoBar();
+        long f = cs.stream().filter(Cliente::getGenero).count();
 
-        assertEquals(57.1, aux, 0.1);
+
+        assertEquals((double) f / cs.size() * 100, aux, 0.1);
     }
 
     @Test
     public void consultaPorcentagemSocios() {
         double aux = BarController.consultaPorcentagemSocios();
+        List<Cliente> cs = BarController.consultaClientesNoBar();
+        long s = cs.stream().filter(Cliente::isSocio).count();
 
-        assertEquals(14.2, aux, 0.1);
+        assertEquals((double) s / cs.size() * 100, aux, 0.1);
     }
 }

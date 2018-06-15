@@ -20,11 +20,11 @@ import pucrs.gcs.cdl.exception.ClienteJaNoBarException;
 import pucrs.gcs.cdl.exception.ClienteForaDoBarException;
 
 public class DbConnection {
-	private static final Path DB_DIR = Paths.get(System.getProperty("user.dir"), "db");
+	private static final Path DB_DIR = Paths.get(System.getProperty("user.home"), ".projetobar");
 	private static final String DB_URL = "jdbc:h2:" + Paths.get(DB_DIR.toString(), "bar").toUri().toString();
 	private static final String DB_USER = "sa";
 	private static final String DB_PASS = "";
-	private static final Path DB_SQL = Paths.get(DB_DIR.toString(), "Bar_ER.sql");
+	private static final Path DB_SQL = Paths.get(System.getProperty("user.dir"), "db", "Bar_ER.sql");
 	private static Connection conn;
 	
 	private static void open() throws SQLException, IOException {
@@ -99,6 +99,12 @@ public class DbConnection {
 				);
 		
 		return queryInsert(sql);
+	}
+
+	public static boolean removeCliente(Cliente cliente) throws SQLException, IOException {
+		String sql = String.format("DELETE FROM Cliente WHERE cpf = '%s'", cliente.getCpf());
+		return queryInsert(sql);
+
 	}
 	
 	public static int countClientes(String filter) throws SQLException, IOException {
