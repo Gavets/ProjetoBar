@@ -7,7 +7,6 @@ pipeline {
     stages {
         stage('Build') { 
             steps {
-                deleteDir()
                 echo 'Gerando build'
                 bat 'git clone https://github.com/Gavets/ProjetoBar.git'
             }
