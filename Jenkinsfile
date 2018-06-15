@@ -1,5 +1,9 @@
 pipeline {
-    agent any 
+    agent any
+    
+    environment {
+        EMAIL_RECIPIENTS = 'mahmoud.romeh@test.com'
+    }
     stages {
         stage('Build') { 
             steps {
@@ -17,8 +21,24 @@ pipeline {
         stage('Deploy') { 
             steps {
                 echo 'Em construcao...'
+                emailext body: '', recipientProviders: [culprits()], subject: '', to: 'arthur.bueno@acad.pucrs.br'
                 
             }
         }
     }
+    post {
+        // Always runs. And it runs before any of the other post conditions.
+        always {
+            // Let's wipe out the workspace before we finish!
+            deleteDir()
+        }
+        success {
+            sendEmail("Successful");
+        }
+        unstable {
+            sendEmail("Unstable");
+        }
+        failure {
+            sendEmail("Failed");
+        }
 }
