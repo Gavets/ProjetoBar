@@ -1,9 +1,5 @@
 pipeline {
     agent any
-    
-    environment {
-        EMAIL_RECIPIENTS = 'arthur.bueno@acad.pucrs.br'
-    }
     stages {
         stage('Build') { 
             steps {
@@ -26,13 +22,10 @@ pipeline {
         }
     }
     post {
-        // Always runs. And it runs before any of the other post conditions.
         always {
-            // Let's wipe out the workspace before we finish!
             deleteDir()
         }
         success {
-            sendEmail("Successful");
             mail bcc: '', body: '(${currentBuild.fullDisplayName})', cc: '', from: '', replyTo: '', subject: 'Pipeline GCS - Status', to: 'arthur.bueno@acad.pucrs'
         }
         unstable {
@@ -42,11 +35,4 @@ pipeline {
             sendEmail("Failed");
         }
     }
-}
-
-def sendEmail(status) {
-    mail(
-            to: "$EMAIL_RECIPIENTS",
-            subject: "Build GCS - " + status,
-        body: "Changes:\n " + BUILD_DISPLAY_NAME + "\n\n Check console output at: $BUILD_URL/console" + "\n")
 }
